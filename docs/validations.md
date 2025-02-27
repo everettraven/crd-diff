@@ -234,7 +234,7 @@ checks:
         # If set to an unknown value, the "Strict" enforcement strategy
         # will be used.
         removalEnforcement: { Strict || None }
-        # AdditionEnforcement is the enforcement strategy that should be used
+        # additionEnforcement is the enforcement strategy that should be used
         # when evaluating if the addition of a default value for a property
         # is considered incompatible.
         #
@@ -249,6 +249,25 @@ checks:
         # If set to an unknown value, the "Strict" enforcement strategy
         # will be used.
         additionEnforcement: { Strict || None }
+```
+
+### Description
+
+Validates compatibility of changes to a property's description. Changes to descriptions
+of properties are generally an acceptable change. If enabled, the validator allows all changes
+to the description of a property.
+
+Example configuration for this validation:
+
+```yaml
+checks:
+  version:
+   # in this example we are configuring the sameVersion validation's enum property validation.
+   # it is possible to configure this property validation separately in both the sameVersion and
+   # servedVersion validations.
+    sameVersion:
+      description:
+        enabled: { true || false }
 ```
 
 ### Maximum, MaxLength, MaxItems, and MaxProperties

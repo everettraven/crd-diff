@@ -25,6 +25,8 @@ checks:
         changeEnforcement: Strict
         removalEnforcement: Strict
         additionEnforcement: Strict
+      description:
+        enabled: true
       required:
         enabled: true
         newEnforcement: Strict
@@ -76,6 +78,8 @@ checks:
         changeEnforcement: Strict
         removalEnforcement: Strict
         additionEnforcement: Strict
+      description:
+        enabled: true
       required:
         enabled: true
         newEnforcement: Strict

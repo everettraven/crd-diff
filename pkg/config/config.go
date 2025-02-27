@@ -64,6 +64,11 @@ var StrictPropertyCheckConfig = PropertyCheckConfig{
 		RemovalEnforcement:  property.DefaultValidationRemovalEnforcementStrict,
 		AdditionEnforcement: property.DefaultValidationAdditionEnforcementStrict,
 	},
+	Description: DescriptionCheckConfig{
+		CheckConfig: CheckConfig{
+			Enabled: true,
+		},
+	},
 	Required: RequiredCheckConfig{
 		CheckConfig: CheckConfig{
 			Enabled: true,
@@ -187,18 +192,19 @@ type VersionCheckConfig struct {
 }
 
 type PropertyCheckConfig struct {
-	Enum          EnumCheckConfig     `yaml:"enum"`
-	Default       DefaultCheckConfig  `yaml:"default"`
-	Required      RequiredCheckConfig `yaml:"required"`
-	Type          TypeCheckConfig     `yaml:"type"`
-	Maximum       MaxCheckConfig      `yaml:"maximum"`
-	MaxItems      MaxCheckConfig      `yaml:"maxItems"`
-	MaxProperties MaxCheckConfig      `yaml:"maxProperties"`
-	MaxLength     MaxCheckConfig      `yaml:"maxLength"`
-	Minimum       MinCheckConfig      `yaml:"minimum"`
-	MinItems      MinCheckConfig      `yaml:"minItems"`
-	MinProperties MinCheckConfig      `yaml:"minProperties"`
-	MinLength     MinCheckConfig      `yaml:"minLength"`
+	Enum          EnumCheckConfig        `yaml:"enum"`
+	Default       DefaultCheckConfig     `yaml:"default"`
+	Description   DescriptionCheckConfig `yaml:"description"`
+	Required      RequiredCheckConfig    `yaml:"required"`
+	Type          TypeCheckConfig        `yaml:"type"`
+	Maximum       MaxCheckConfig         `yaml:"maximum"`
+	MaxItems      MaxCheckConfig         `yaml:"maxItems"`
+	MaxProperties MaxCheckConfig         `yaml:"maxProperties"`
+	MaxLength     MaxCheckConfig         `yaml:"maxLength"`
+	Minimum       MinCheckConfig         `yaml:"minimum"`
+	MinItems      MinCheckConfig         `yaml:"minItems"`
+	MinProperties MinCheckConfig         `yaml:"minProperties"`
+	MinLength     MinCheckConfig         `yaml:"minLength"`
 }
 
 type CheckConfig struct {
@@ -216,6 +222,10 @@ type DefaultCheckConfig struct {
 	ChangeEnforcement   property.DefaultValidationChangeEnforcement   `json:"changeEnforcement"`
 	RemovalEnforcement  property.DefaultValidationRemovalEnforcement  `json:"removalEnforcement"`
 	AdditionEnforcement property.DefaultValidationAdditionEnforcement `json:"additionEnforcement"`
+}
+
+type DescriptionCheckConfig struct {
+	CheckConfig
 }
 
 type RequiredCheckConfig struct {
@@ -245,7 +255,7 @@ func ValidatorForConfig(cfg Config) *crd.Validator {
 }
 
 func ValidationsForCRDChecks(checks CRDChecks) []crd.Validation {
-	validations := []crd.Validation{}
+	var validations []crd.Validation
 	if checks.Scope.Enabled {
 		validations = append(validations, &crd.Scope{})
 	}
@@ -294,7 +304,7 @@ func ServedVersionConfigForServedVersionCheckConfig(cfg ServedVersionCheckConfig
 }
 
 func PropertyValidationsForPropertyCheckConfig(cfg PropertyCheckConfig) []property.Validation {
-	validations := []property.Validation{}
+	var validations []property.Validation
 	if cfg.Enum.Enabled {
 		validations = append(validations, &property.Enum{
 			RemovalEnforcement:  cfg.Enum.RemovalEnforcement,
@@ -308,6 +318,10 @@ func PropertyValidationsForPropertyCheckConfig(cfg PropertyCheckConfig) []proper
 			RemovalEnforcement:  cfg.Default.RemovalEnforcement,
 			AdditionEnforcement: cfg.Default.AdditionEnforcement,
 		})
+	}
+
+	if cfg.Description.Enabled {
+		validations = append(validations, &property.Description{})
 	}
 
 	if cfg.Required.Enabled {
